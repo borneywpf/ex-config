@@ -452,8 +452,10 @@ function exconfig#gen_sh_update_files(path)
                     \ 'export FILE_SUFFIXS="'.file_pattern.'"'     ,
                     \ 'export TMP="${DEST}/_files"'                ,
                     \ 'export TARGET="${DEST}/files"'              ,
+                    \ 'export DATA_TMP="${DEST}/_data.files"' ,
+                    \ 'export DATA_TARGET="${DEST}/data.files"'  ,
                     \ 'export ID_TARGET="${DEST}/idutils-files"'   ,
-                    \ 'bash ${TOOLS}/shell/bash/update-filelist.sh'  ,
+                    \ 'sh ${TOOLS}/shell/bash/update-filelist.sh'  ,
                     \ ]
     endif
 
@@ -482,7 +484,7 @@ function exconfig#gen_sh_update_ctags(path)
     endif
 
     " get ctags options
-    let ctags_optioins = '--fields=+iaS --extra=+q'
+    let ctags_optioins = '--fields=+iaS --extra=+q -R'
 
     " generate scripts
     if ex#os#is('windows')
@@ -558,7 +560,7 @@ function exconfig#gen_sh_update_cscope(path)
     endif
 
     " get cscope options
-    let cscope_optioins = '-kb -i'
+    let cscope_optioins = '-Rbkq'
 
     " generate scripts
     if ex#os#is('windows')
