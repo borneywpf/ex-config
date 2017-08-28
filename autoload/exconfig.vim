@@ -52,6 +52,7 @@ function exconfig#apply()
     let g:exvim_project_name = project_name
     let g:exvim_project_root = cwd
     let g:exvim_folder = './.exvim.'.project_name
+    let g:exvim_folder_root = g:exvim_project_root.'/.exvim.'.project_name
 
     " set parent working directory
     silent exec 'cd ' . fnameescape(cwd)
@@ -136,8 +137,9 @@ function exconfig#apply()
 
     " set lookupfile
     if vimentry#check('enable_lookupfile', 'true')
-        let file_filenametags = g:exvim_folder.'/filenametags'
-        let g:LookupFile_TagExpr = '"'.file_filenametags.'"'
+    let g:exvim_folder = g:exvim_project_root.'/.exvim.'.project_name
+        let filenametags = g:exvim_folder_root.'/filenametags'
+        let g:LookupFile_TagExpr = '''"'.filenametags.'"'''
         call exconfig#gen_sh_update_lookupfiles(g:exvim_folder)
     endif
 
