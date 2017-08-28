@@ -137,9 +137,7 @@ function exconfig#apply()
     " set lookupfile
     if vimentry#check('enable_lookupfile', 'true')
         let file_filenametags = g:exvim_folder.'/filenametags'
-    
         let g:LookupFile_TagExpr = '"'.file_filenametags.'"'
-        echo g:LookupFile_TagExpr
         call exconfig#gen_sh_update_lookupfiles(g:exvim_folder)
     endif
 
