@@ -134,6 +134,15 @@ function exconfig#apply()
         endif
     endif
 
+    " set lookupfile
+    if vimentry#check('enable_lookupfile', 'true')
+        let file_filenametags = g:exvim_folder.'/filenametags'
+    
+        let g:LookupFile_TagExpr = '"'.file_filenametags.'"'
+        echo g:LookupFile_TagExpr
+        call exconfig#gen_sh_update_lookupfiles(g:exvim_folder)
+    endif
+
     " set gsearch
     if vimentry#check('enable_gsearch', 'true')
         let gsearch_engine = vimentry#get('gsearch_engine')
@@ -339,6 +348,53 @@ function exconfig#apply()
     if exists('*g:exvim_post_init')
         call g:exvim_post_init()
     endif
+endfunction
+
+" exconfig#gen_sh_update_lookupfiles {{{
+function exconfig#gen_sh_update_lookupfiles(path)
+    " generate scripts
+    if ex#os#is('windows')
+        " DISABLE
+    else
+        let exclude = '-not'
+        if vimentry#check('folder_filter_mode', 'include')
+            let exclude = ''
+        endif
+
+        let folder_filter = vimentry#get('folder_filter', [])
+        let folder_pattern = ''
+        if !empty(folder_filter)
+            for name in folder_filter
+                let folder_pattern .= substitute(name, "\+", "\\\\+", "g") . '|'
+            endfor
+            let folder_pattern = strpart( folder_pattern, 0, len(folder_pattern) - 1)
+        endif
+
+        let file_pattern = '.*'
+        let file_filters = vimentry#get('file_filter', [])
+        if !empty(file_filters)
+            let file_pattern = ''
+            for name in file_filters
+                let file_pattern .= name . '|'
+            endfor
+            let file_pattern = strpart( file_pattern, 0, len(file_pattern) - 1)
+        endif
+        let fullpath = a:path . '/update-lookupfile.sh'
+        let scripts = [
+                    \ '#!/bin/bash'                                ,
+                    \ 'export DEST="'.a:path.'"'                   ,
+                    \ 'export IS_EXCLUDE='.exclude                 ,
+                    \ 'export TOOLS="'.expand(g:ex_tools_path).'"' ,
+                    \ 'export FOLDERS="'.folder_pattern.'"'        ,
+                    \ 'export FILE_SUFFIXS="'.file_pattern.'"'     ,
+                    \ 'export TMP="${DEST}/_filenametags"'                ,
+                    \ 'export TARGET="${DEST}/filenametags"'              ,
+                    \ 'sh ${TOOLS}/shell/bash/update-lookupfile.sh'  ,
+                    \ ]
+    endif
+
+    " save to file
+    call writefile ( scripts, fullpath )
 endfunction
 
 " exconfig#gen_sh_update_files {{{
@@ -905,6 +961,13 @@ function exconfig#update_exvim_files()
     if vimentry#check('enable_gsearch','true')
         let cmd .= and
         let cmd .= shell_exec . ' ' . path.'update-idutils'.suffix
+        let and = shell_and
+    endif
+
+    " update cscope
+     if vimentry#check('enable_lookupfile','true')
+        let cmd .= and
+        let cmd .= shell_exec . ' ' . path.'update-lookupfile'.suffix
         let and = shell_and
     endif
 
