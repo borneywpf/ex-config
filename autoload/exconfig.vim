@@ -112,7 +112,6 @@ function exconfig#apply()
     if vimentry#check('enable_tags', 'true')
         let s:old_tagrelative=&tagrelative
         let &tagrelative=0 " set notagrelative
-
         let s:old_tags=&tags
         let &tags=fnameescape(s:old_tags.','.g:exvim_folder.'/tags')
 
@@ -137,10 +136,9 @@ function exconfig#apply()
 
     " set lookupfile
     if vimentry#check('enable_lookupfile', 'true')
-    let g:exvim_folder = g:exvim_project_root.'/.exvim.'.project_name
-        let filenametags = g:exvim_folder_root.'/filenametags'
-        let g:LookupFile_TagExpr = '''"'.filenametags.'"'''
         call exconfig#gen_sh_update_lookupfiles(g:exvim_folder)
+        let file_filenametags = g:exvim_folder_root.'/filenametags'
+        let g:LookupFile_TagExpr = '"'.file_filenametags.'"'
     endif
 
     " set gsearch
