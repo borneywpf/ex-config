@@ -136,9 +136,9 @@ function exconfig#apply()
 
     " set lookupfile
     if vimentry#check('enable_lookupfile', 'true')
-        call exconfig#gen_sh_update_lookupfiles(g:exvim_folder)
         let file_filenametags = g:exvim_folder_root.'/filenametags'
         let g:LookupFile_TagExpr = '"'.file_filenametags.'"'
+        call exconfig#gen_sh_update_lookupfiles(g:exvim_folder)
     endif
 
     " set gsearch
@@ -152,7 +152,7 @@ function exconfig#apply()
 
     " set cscope file path
     if vimentry#check('enable_cscope', 'true')
-        call excscope#set_csfile(g:exvim_folder.'/cscope.out')
+        call excscope#set_csfile(g:exvim_folder_root.'/cscope.out')
         call exconfig#gen_sh_update_cscope(g:exvim_folder)
         call excscope#connect()
     endif
