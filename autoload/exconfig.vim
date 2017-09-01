@@ -175,15 +175,15 @@ function exconfig#apply()
         augroup END
     endif
 
-    " custom ctrlp ignores
+    " custom ctrlp ignores start
     let file_pattern = ''
-    " let file_suffixs = vimentry#get('file_filter',[])
-    " if len(file_suffixs) > 0
-    "     for suffix in file_suffixs
-    "         let file_pattern .= suffix . '|'
-    "     endfor
-    "     let file_pattern = '\v\.(' . file_pattern , ')$'
-    " endif
+    let file_suffixs = vimentry#get('file_filter',[])
+    if len(file_suffixs) > 0
+         for suffix in file_suffixs
+             let file_pattern .= suffix . '|'
+         endfor
+         let file_pattern = '\v\.(' . file_pattern , ')$'
+    endif
 
     let dir_pattern = ''
     if vimentry#check( 'folder_filter_mode',  'exclude' )
@@ -202,7 +202,7 @@ function exconfig#apply()
                 \ 'dir': dir_pattern,
                 \ 'file': file_pattern,
                 \ }
-
+    " custom ctrlp ignores end
 
     " TODO:
     " " set vimentry references
