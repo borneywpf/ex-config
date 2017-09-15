@@ -175,14 +175,17 @@ function exconfig#apply()
         augroup END
     endif
 
-    " custom ctrlp ignores start
-    let file_pattern = ''
-    let file_suffixs = vimentry#get('file_filter',[])
-    if len(file_suffixs) > 0
-         for suffix in file_suffixs
-             let file_pattern .= suffix . '|'
-         endfor
-         let file_pattern = '\v\.(' . file_pattern , ')$'
+    " custom ctrlp\leaderf ignores start
+    let file_ignore_pattern = ''
+    let ifiles = vimentry#get('file_ignore_pattern',[])
+
+    if len(ifiles) > 0
+        for ifile in ifiles
+            let file_ignore_pattern .= ifile . '|'
+        endfor
+        let file_ignore_pattern = strpart( file_ignore_pattern, 0, len(file_ignore_pattern) - 1)
+
+        let file_ignore_pattern = '\v[\/](' . file_ignore_pattern . ')$'
     endif
 
     let dir_pattern = ''
@@ -197,41 +200,19 @@ function exconfig#apply()
             let dir_pattern = '\v[\/](' . dir_pattern . ')$'
         endif
     endif
+    
+    echo '"'.file_ignore_pattern.'"'
 
-    let g:ctrlp_custom_ignore = {
-                \ 'dir': dir_pattern,
-                \ 'file': file_pattern,
-                \ }
-    " custom ctrlp ignores end
-
-    " custom leaderf ignores start
-    let file_pattern = ''
-    let file_suffixs = vimentry#get('file_filter',[])
-    if len(file_suffixs) > 0
-         for suffix in file_suffixs
-             let file_pattern .= suffix . '|'
-         endfor
-         let file_pattern = '\v\.(' . file_pattern , ')$'
-    endif
-
-    let dir_pattern = ''
-    if vimentry#check( 'folder_filter_mode',  'exclude' )
-        let folders = vimentry#get('folder_filter',[])
-        if len(folders) > 0
-            for folder in folders
-                let dir_pattern .= folder . '|'
-            endfor
-            let dir_pattern = strpart( dir_pattern, 0, len(dir_pattern) - 1)
-
-            let dir_pattern = '\v[\/](' . dir_pattern . ')$'
-        endif
-    endif
+    "let g:ctrlp_custom_ignore = {
+    "           \ 'dir': dir_pattern,
+    "            \ 'file': file_ignore_pattern,
+    "            \ }
 
     let g:Lf_WildIgnore = {
                 \ 'dir': dir_pattern,
-                \ 'file': file_pattern,
+                \ 'file': file_ignore_pattern,
                 \ }
-    " custom leaderf ignores end
+    " custom ctrlp\leaderf ignores end
 
     " TODO:
     " " set vimentry references
