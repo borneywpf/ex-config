@@ -201,17 +201,17 @@ function exconfig#apply()
         endif
     endif
     
-    echo '"'.file_ignore_pattern.'"'
+    "echo '"'.file_ignore_pattern.'"'
 
-    "let g:ctrlp_custom_ignore = {
-    "           \ 'dir': dir_pattern,
-    "            \ 'file': file_ignore_pattern,
-    "            \ }
-
-    let g:Lf_WildIgnore = {
-                \ 'dir': dir_pattern,
+    let g:ctrlp_custom_ignore = {
+               \ 'dir': dir_pattern,
                 \ 'file': file_ignore_pattern,
                 \ }
+
+    "let g:Lf_WildIgnore = {
+    "            \ 'dir': dir_pattern,
+    "            \ 'file': file_ignore_pattern,
+    "            \ }
     " custom ctrlp\leaderf ignores end
 
     " TODO:
