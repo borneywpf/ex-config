@@ -204,6 +204,35 @@ function exconfig#apply()
                 \ }
     " custom ctrlp ignores end
 
+    " custom leaderf ignores start
+    let file_pattern = ''
+    let file_suffixs = vimentry#get('file_filter',[])
+    if len(file_suffixs) > 0
+         for suffix in file_suffixs
+             let file_pattern .= suffix . '|'
+         endfor
+         let file_pattern = '\v\.(' . file_pattern , ')$'
+    endif
+
+    let dir_pattern = ''
+    if vimentry#check( 'folder_filter_mode',  'exclude' )
+        let folders = vimentry#get('folder_filter',[])
+        if len(folders) > 0
+            for folder in folders
+                let dir_pattern .= folder . '|'
+            endfor
+            let dir_pattern = strpart( dir_pattern, 0, len(dir_pattern) - 1)
+
+            let dir_pattern = '\v[\/](' . dir_pattern . ')$'
+        endif
+    endif
+
+    let g:Lf_WildIgnore = {
+                \ 'dir': dir_pattern,
+                \ 'file': file_pattern,
+                \ }
+    " custom leaderf ignores end
+
     " TODO:
     " " set vimentry references
     " if !vimentry#check('sub_vimentry', '')
